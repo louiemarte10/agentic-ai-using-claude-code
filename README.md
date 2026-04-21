@@ -332,11 +332,13 @@ A real-time web dashboard for monitoring and controlling your entire agent fleet
 | Feature | Description |
 |---------|-------------|
 | **Agent Monitoring** | Real-time Running/Offline status for manager + all tenants |
-| **Toggle Switch** | Turn tenant agents On/Off directly from the dashboard |
-| **Clickable Cards** | Click any agent to expand token usage charts, cost breakdown, and recent activity |
+| **Toggle Switch** | Turn tenant agents On/Off with loading spinner animation |
+| **Clickable Cards** | Click any agent to expand detail panel with charts, stats, and activity |
 | **Sortable Table** | Switch between Cards and Table views, sort by name, model, status, turns, or cost |
-| **Token Usage** | Input/output token counts with visual bar charts per agent |
+| **Token Usage Charts** | Input/output token counts with visual bar charts per agent |
+| **Token Usage Per Turn** | Per-turn table showing input, output, cache read tokens and cost |
 | **Cost Tracking** | Today and total cost per agent |
+| **Telegram Username** | Recent Activity displays user labels with timestamps |
 | **Hive Mind Feed** | Cross-agent activity log with color-coded agent badges |
 | **Memory Browser** | Memory stats, fading memories, top accessed entries |
 | **Task Management** | Scheduled cron jobs and async mission task queue |
