@@ -390,13 +390,16 @@ export function startDashboard(botApi?: Api<RawApi>): void {
     return c.json({ agents: allAgents });
   });
 
-  // Agent-specific recent conversation
+  // Agent-specific recent conversation with token usage
   app.get('/api/agents/:id/conversation', (c) => {
     const agentId = c.req.param('id');
     const chatId = c.req.query('chatId') || ALLOWED_CHAT_ID || '';
     const limit = parseInt(c.req.query('limit') || '4', 10);
     const turns = getAgentRecentConversation(agentId, chatId, limit);
-    return c.json({ turns });
+    const recentUsage = getDashboardRecentTokenUsage(chatId, limit);
+    // Filter token usage to this agent
+    const agentUsage = recentUsage.filter((u) => (u as any).agent_id === agentId);
+    return c.json({ turns, tokenUsage: agentUsage });
   });
 
   // Agent-specific tasks
