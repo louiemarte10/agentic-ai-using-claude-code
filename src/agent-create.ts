@@ -394,11 +394,50 @@ export function activateAgent(agentId: string): ActivationResult {
       return activateLaunchd(agentId);
     } else if (os.platform() === 'linux') {
       return activateSystemd(agentId);
+    } else if (os.platform() === 'win32') {
+      return activateWindows(agentId);
     }
     return { ok: false, error: `Unsupported platform: ${os.platform()}` };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+function activateWindows(agentId: string): ActivationResult {
+  const { spawn } = require('child_process');
+  const entryPoint = path.join(PROJECT_ROOT, 'dist', 'index.js');
+
+  // Spawn detached node process with CLAUDECODE unset
+  const env = { ...process.env };
+  delete env.CLAUDECODE;
+
+  const child = spawn('node', [entryPoint, '--agent', agentId], {
+    cwd: PROJECT_ROOT,
+    env,
+    detached: true,
+    stdio: 'ignore',
+    windowsHide: true,
+  });
+  child.unref();
+
+  // Wait briefly for PID file
+  for (let i = 0; i < 5; i++) {
+    const pidFile = path.join(STORE_DIR, `agent-${agentId}.pid`);
+    if (fs.existsSync(pidFile)) {
+      const p = parseInt(fs.readFileSync(pidFile, 'utf-8').trim(), 10);
+      if (!isNaN(p)) {
+        try {
+          process.kill(p, 0);
+          logger.info({ agentId, pid: p }, 'Agent activated (Windows)');
+          return { ok: true, pid: p };
+        } catch { /* not yet */ }
+      }
+    }
+    execSync('timeout /t 1 /nobreak >nul 2>&1', { stdio: 'ignore' });
+  }
+
+  logger.info({ agentId, pid: child.pid }, 'Agent spawned (Windows, PID file pending)');
+  return { ok: true, pid: child.pid ?? undefined };
 }
 
 function activateLaunchd(agentId: string): ActivationResult {

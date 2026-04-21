@@ -545,6 +545,10 @@ export function startDashboard(botApi?: Api<RawApi>): void {
   // Check if a specific agent is running
   app.get('/api/agents/:id/status', (c) => {
     const agentId = c.req.param('id');
+    // For main bot, use Telegram connection state (PID file is unreliable)
+    if (agentId === 'main') {
+      return c.json({ running: getTelegramConnected() });
+    }
     return c.json({ running: isAgentRunning(agentId) });
   });
 
