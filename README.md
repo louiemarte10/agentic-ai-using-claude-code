@@ -321,6 +321,40 @@ louieDevAgent/
 +-- dist/                        # Compiled JS (gitignored)
 ```
 
+## Dashboard (Vue.js Mission Control)
+
+A separate Vue.js dashboard for monitoring all agents from anywhere.
+
+**Repo:** [louie-agent-dashboard](https://github.com/louiemarte10/louie-agent-dashboard)
+
+### Features
+- System health overview (context %, turns, Telegram status)
+- Agent status grid (manager + all tenants, running/offline, costs)
+- Hive mind activity feed (cross-agent awareness)
+- Memory browser (stats, fading memories, top accessed)
+- Task management (scheduled cron jobs + mission tasks)
+- Dark theme, auto-refresh every 30s
+
+### Deployment
+1. Deploy [louie-agent-dashboard](https://github.com/louiemarte10/louie-agent-dashboard) to **Vercel** (free)
+2. Expose localhost:3141 via **Cloudflare Tunnel** (free) -- see [Tunnel Setup Guide](docs/cloudflare-tunnel.md)
+3. Set the tunnel URL as the API URL in the dashboard Settings page
+
+### Remote Access (Cloudflare Tunnel)
+
+Quick start:
+```bash
+# Download cloudflared (no install needed)
+curl -kL -o cloudflared.exe https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe
+
+# Temporary tunnel (URL changes on restart)
+cloudflared tunnel --url http://localhost:3141
+
+# For a permanent URL, set up a named tunnel -- see docs/cloudflare-tunnel.md
+```
+
+Full guide: [docs/cloudflare-tunnel.md](docs/cloudflare-tunnel.md)
+
 ## Security
 
 - **Chat ID restriction** -- only your Telegram account can interact with any bot
