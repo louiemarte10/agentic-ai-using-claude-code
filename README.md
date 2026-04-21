@@ -323,19 +323,38 @@ louieDevAgent/
 
 ## Dashboard (Vue.js Mission Control)
 
-A separate Vue.js dashboard for monitoring all agents from anywhere.
+A real-time web dashboard for monitoring and controlling your entire agent fleet from anywhere. Built with Vue 3 + Tailwind CSS, deployed on Vercel (free).
 
 **Repo:** [louie-agent-dashboard](https://github.com/louiemarte10/louie-agent-dashboard)
 
-### Features
-- System health overview (context %, turns, Telegram status)
-- Agent status grid (manager + all tenants, running/offline, costs)
-- Hive mind activity feed (cross-agent awareness)
-- Memory browser (stats, fading memories, top accessed)
-- Task management (scheduled cron jobs + mission tasks)
-- Dark theme, auto-refresh every 30s
+### Dashboard Features
 
-### Deployment
+| Feature | Description |
+|---------|-------------|
+| **Agent Monitoring** | Real-time Running/Offline status for manager + all tenants |
+| **Toggle Switch** | Turn tenant agents On/Off directly from the dashboard |
+| **Clickable Cards** | Click any agent to expand token usage charts, cost breakdown, and recent activity |
+| **Sortable Table** | Switch between Cards and Table views, sort by name, model, status, turns, or cost |
+| **Token Usage** | Input/output token counts with visual bar charts per agent |
+| **Cost Tracking** | Today and total cost per agent |
+| **Hive Mind Feed** | Cross-agent activity log with color-coded agent badges |
+| **Memory Browser** | Memory stats, fading memories, top accessed entries |
+| **Task Management** | Scheduled cron jobs and async mission task queue |
+| **Auto-Refresh** | All data refreshes every 30 seconds |
+| **Dark Theme** | Full dark mode UI |
+| **Connection Test** | Settings page with API connection verification |
+
+### Dashboard Pages
+
+- **Dashboard** -- system health overview, agent grid, hive mind feed, cost summary
+- **Agents** -- interactive fleet view (cards or table), toggle switches, detail panels with charts
+- **Hive Mind** -- chronological cross-agent activity stream
+- **Memory** -- memory stats, fading/decaying entries, top accessed
+- **Tasks** -- scheduled cron jobs + mission task queue with status badges
+- **Settings** -- API URL, token, chat ID configuration with test button
+
+### Dashboard Deployment
+
 1. Deploy [louie-agent-dashboard](https://github.com/louiemarte10/louie-agent-dashboard) to **Vercel** (free)
 2. Expose localhost:3141 via **Cloudflare Tunnel** (free) -- see [Tunnel Setup Guide](docs/cloudflare-tunnel.md)
 3. Set the tunnel URL as the API URL in the dashboard Settings page
