@@ -378,19 +378,12 @@ export function startDashboard(botApi?: Api<RawApi>): void {
       }
     });
 
-    // Include main bot too
-    const mainPidFile = path.join(STORE_DIR, 'claudeclaw.pid');
-    let mainRunning = false;
-    if (fs.existsSync(mainPidFile)) {
-      try {
-        const pid = parseInt(fs.readFileSync(mainPidFile, 'utf-8').trim(), 10);
-        process.kill(pid, 0);
-        mainRunning = true;
-      } catch { /* not running */ }
-    }
+    // Include main bot too — use actual bot info from Telegram connection
+    const botInfo = getBotInfo();
+    const mainRunning = getTelegramConnected();
     const mainStats = getAgentTokenStats('main');
     const allAgents = [
-      { id: 'main', name: 'Main', description: 'Primary ClaudeClaw bot', model: 'claude-opus-4-6', running: mainRunning, todayTurns: mainStats.todayTurns, todayCost: mainStats.todayCost },
+      { id: 'main', name: botInfo.name || 'louieDevAgent', botUsername: botInfo.username || '', description: 'Manager bot — triage, delegation, cross-agent planning', model: agentDefaultModel || 'claude-sonnet-4-6', running: mainRunning, todayTurns: mainStats.todayTurns, todayCost: mainStats.todayCost },
       ...agents,
     ];
 
