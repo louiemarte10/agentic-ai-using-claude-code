@@ -1621,7 +1621,7 @@ export function getSessionConversation(sessionId: string, limit = 40): Conversat
     .all(sessionId, limit) as ConversationTurn[];
 }
 
-export function getAgentTokenStats(agentId: string): { todayCost: number; todayTurns: number; allTimeCost: number } {
+export function getAgentTokenStats(agentId: string): { todayCost: number; todayTurns: number; totalCost: number; totalTurns: number; allTimeCost: number } {
   const today = db
     .prepare(
       `SELECT COALESCE(SUM(cost_usd), 0) as todayCost, COUNT(*) as todayTurns
@@ -1631,10 +1631,10 @@ export function getAgentTokenStats(agentId: string): { todayCost: number; todayT
     .get(agentId) as { todayCost: number; todayTurns: number };
 
   const allTime = db
-    .prepare('SELECT COALESCE(SUM(cost_usd), 0) as allTimeCost FROM token_usage WHERE agent_id = ?')
-    .get(agentId) as { allTimeCost: number };
+    .prepare('SELECT COALESCE(SUM(cost_usd), 0) as totalCost, COUNT(*) as totalTurns FROM token_usage WHERE agent_id = ?')
+    .get(agentId) as { totalCost: number; totalTurns: number };
 
-  return { ...today, allTimeCost: allTime.allTimeCost };
+  return { ...today, ...allTime, allTimeCost: allTime.totalCost };
 }
 
 export function getAgentRecentConversation(agentId: string, chatId: string, limit = 4): ConversationTurn[] {

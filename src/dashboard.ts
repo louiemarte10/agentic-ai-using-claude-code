@@ -396,10 +396,11 @@ export function startDashboard(botApi?: Api<RawApi>): void {
     const chatId = c.req.query('chatId') || ALLOWED_CHAT_ID || '';
     const limit = parseInt(c.req.query('limit') || '4', 10);
     const turns = getAgentRecentConversation(agentId, chatId, limit);
-    const recentUsage = getDashboardRecentTokenUsage(chatId, limit);
+    // Fetch more token usage records (up to 50) to cover all today's turns
+    const recentUsage = getDashboardRecentTokenUsage(chatId, 50);
     // Filter token usage to this agent
     const agentUsage = recentUsage.filter((u) => (u as any).agent_id === agentId);
-    return c.json({ turns, tokenUsage: agentUsage });
+    return c.json({ turns, tokenUsage: agentUsage, chatId });
   });
 
   // Agent-specific tasks
