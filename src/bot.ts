@@ -7,6 +7,7 @@ import { runAgent, UsageInfo, AgentProgressEvent } from './agent.js';
 import {
   AGENT_ID,
   ALLOWED_CHAT_ID,
+  ALLOWED_CHAT_IDS,
   CONTEXT_LIMIT,
   DASHBOARD_PORT,
   DASHBOARD_TOKEN,
@@ -302,11 +303,11 @@ async function sendTyping(api: Api<RawApi>, chatId: number): Promise<void> {
  * Returns true if the message should be processed.
  */
 function isAuthorised(chatId: number): boolean {
-  if (!ALLOWED_CHAT_ID) {
+  if (ALLOWED_CHAT_IDS.size === 0) {
     // Not yet configured — let every request through but warn in the reply handler
     return true;
   }
-  return chatId.toString() === ALLOWED_CHAT_ID;
+  return ALLOWED_CHAT_IDS.has(chatId.toString());
 }
 
 /**

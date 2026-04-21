@@ -58,9 +58,15 @@ export function setAgentOverrides(opts: {
 export const TELEGRAM_BOT_TOKEN =
   process.env.TELEGRAM_BOT_TOKEN || envConfig.TELEGRAM_BOT_TOKEN || '';
 
-// Only respond to this Telegram chat ID. Set this after getting your ID via /chatid.
-export const ALLOWED_CHAT_ID =
-  process.env.ALLOWED_CHAT_ID || envConfig.ALLOWED_CHAT_ID || '';
+// Respond to these Telegram chat IDs. Supports comma-separated list for multi-user.
+// Example: ALLOWED_CHAT_ID=123456,789012,345678
+const rawAllowedChatId = process.env.ALLOWED_CHAT_ID || envConfig.ALLOWED_CHAT_ID || '';
+export const ALLOWED_CHAT_ID = rawAllowedChatId; // kept for backward compat (first ID used for scheduler/notifications)
+export const ALLOWED_CHAT_IDS: Set<string> = new Set(
+  rawAllowedChatId.split(',').map(id => id.trim()).filter(Boolean)
+);
+// Primary chat ID (first in list) -- used for scheduler results and notifications
+export const PRIMARY_CHAT_ID = [...ALLOWED_CHAT_IDS][0] || '';
 
 export const WHATSAPP_ENABLED =
   (process.env.WHATSAPP_ENABLED || envConfig.WHATSAPP_ENABLED || '').toLowerCase() === 'true';

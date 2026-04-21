@@ -175,7 +175,12 @@ Edit `.env`:
 ```bash
 # Manager bot
 TELEGRAM_BOT_TOKEN=your_manager_bot_token
+
+# Single user
 ALLOWED_CHAT_ID=your_telegram_chat_id
+
+# Multi-user (comma-separated)
+ALLOWED_CHAT_ID=123456789,987654321,555555555
 
 # Tenant bots (add as needed)
 TELEGRAM_BOT_TOKEN_DEV=your_dev_bot_token
@@ -375,6 +380,44 @@ cloudflared tunnel --url http://localhost:3141
 ```
 
 Full guide: [docs/cloudflare-tunnel.md](docs/cloudflare-tunnel.md)
+
+## Multi-User Session Management
+
+The system supports multiple users messaging the same bot simultaneously. Each user gets fully isolated:
+
+| Component | Isolation |
+|-----------|-----------|
+| **Claude Session** | Unique `session_id` per `(chat_id, agent_id)` -- each user has their own Claude conversation |
+| **Conversation History** | Stored per `chat_id` -- users never see each other's messages |
+| **Memory** | Extracted and stored per `chat_id` -- private to each user |
+| **Token Usage** | Tracked per `chat_id` -- costs attributed to the correct user |
+| **Hive Mind** | Shared across users (cross-agent awareness is global) |
+
+### How to Enable Multi-User
+
+Add multiple comma-separated Telegram chat IDs to `.env`:
+
+```bash
+ALLOWED_CHAT_ID=7174698293,123456789,987654321
+```
+
+Each user sends `/chatid` to the bot to get their ID. The first ID in the list is the **primary user** who receives scheduled task results and system notifications.
+
+### How It Works
+
+```
+User A messages bot ──> Session A (isolated)
+                         |-- Memory A
+                         |-- Conversation A
+                         +-- Token tracking A
+
+User B messages bot ──> Session B (isolated)
+                         |-- Memory B
+                         |-- Conversation B
+                         +-- Token tracking B
+
+Both share: Hive Mind, Scheduled Tasks output, Dashboard
+```
 
 ## Security
 
