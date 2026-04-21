@@ -1,7 +1,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { execSync } from 'child_process';
+import { execSync, spawn } from 'child_process';
 import yaml from 'js-yaml';
 
 import { CLAUDECLAW_CONFIG, PROJECT_ROOT, STORE_DIR } from './config.js';
@@ -404,7 +404,6 @@ export function activateAgent(agentId: string): ActivationResult {
 }
 
 function activateWindows(agentId: string): ActivationResult {
-  const { spawn } = require('child_process');
   const entryPoint = path.join(PROJECT_ROOT, 'dist', 'index.js');
 
   // Spawn detached node process with CLAUDECODE unset
