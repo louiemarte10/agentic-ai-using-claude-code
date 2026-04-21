@@ -1,0 +1,13 @@
+name: Dev
+description: SaaS & mobile development, code architecture, debugging, API integrations, full-stack engineering
+
+# Env var in .env holding this agent's Telegram bot token
+telegram_bot_token_env: TELEGRAM_BOT_TOKEN_DEV
+
+# Default model - Opus for complex dev work
+model: claude-opus-4-6
+
+# MCP servers this agent can use (optional - uncomment to restrict)
+# mcp_servers:
+#   - filesystem
+#   - github
