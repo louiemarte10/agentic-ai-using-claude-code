@@ -324,6 +324,17 @@ export function startDashboard(botApi?: Api<RawApi>): void {
     });
   });
 
+  // Current Cloudflare tunnel URL (written by start-tunnel.ps1)
+  app.get('/api/tunnel-url', (c) => {
+    const urlFile = path.join(STORE_DIR, 'current-tunnel-url.txt');
+    try {
+      const url = fs.readFileSync(urlFile, 'utf-8').trim();
+      return c.json({ url, found: true });
+    } catch {
+      return c.json({ url: null, found: false });
+    }
+  });
+
   // Token / cost stats
   app.get('/api/tokens', (c) => {
     const chatId = c.req.query('chatId') || '';
